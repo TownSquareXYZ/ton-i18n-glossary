@@ -1,11 +1,20 @@
-import { join } from "path";
-
 import * as fs from "fs";
 import axios from "axios";
 
 import crowdin, { GlossariesModel } from "@crowdin/crowdin-api-client";
 
 import * as deepl from "deepl-node";
+
+type langKeys = "en" | "zh-CN" | "ru" | "ko" | "pl" | "uk";
+
+const languageMap = {
+  en: "English",
+  "zh-CN": "ChineseSimplified",
+  ru: "Russian",
+  ko: "Korean",
+  pl: "Polish",
+  uk: "Ukrainian",
+};
 
 const csv = require("csv-parser");
 
@@ -81,30 +90,43 @@ export async function uploadDeeplGlossary(
     targetEntries
   );
   glossaries = await translator.listGlossaries();
-  console.log("glossaries", glossaries);
   const glossary = glossaries.find((glossary) => glossary.name == glossaryName);
   console.log(
-    `Glossary ID: ${glossary?.glossaryId}, source: ${glossary?.sourceLang}, ` +
-      `target: ${glossary?.targetLang}, contains ${glossary?.entryCount} entries.`
+    `Glossary ID: ${glossary?.glossaryId},\nGlossary Name:${glossary?.name},\n` +
+      `source: ${glossary?.sourceLang}, target: ${glossary?.targetLang},\n` +
+      `contains ${glossary?.entryCount} entries.\n\n`
   );
 }
 
-export const getGlossaryEntires = (filePath: string) => {
+export const getGlossaryEntires = (
+  sourceLang: langKeys,
+  targetLang: langKeys,
+  filePath: string
+) => {
   const results: any = [];
+  const mappedSourceLang = languageMap[sourceLang];
+  const mappedTargetLangLang = languageMap[targetLang];
+
   return new Promise((res) => {
     fs.createReadStream(filePath)
       .pipe(
         csv({
           mapHeaders: ({ header, index }: any) =>
-            header.includes("Term:English") ? "Term:English" : header,
+            header.includes(`Term:${mappedSourceLang}`)
+              ? `Term:${mappedSourceLang}`
+              : header,
         })
       )
       .on("data", (data: any) => results.push(data))
       .on("end", () => {
         const entriesObj: any = {};
         results.forEach((res: any) => {
-          entriesObj[res["Term:English"].trim()] = res["Term:English"].trim();
+          entriesObj[res[`Term:${mappedSourceLang}`].trim()] = (
+            res[`Term:${mappedTargetLangLang}`] ||
+            res[`Term:${mappedSourceLang}`]
+          ).trim();
         });
+
         res(entriesObj);
       });
   });

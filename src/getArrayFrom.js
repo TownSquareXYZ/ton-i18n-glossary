@@ -20,7 +20,7 @@ const getArrayFromTonGlossary = () => {
 };
 
 const getArrayFromWikiCs = () => {
-  const targetArray = document.querySelectorAll("dt");
+  const targetArray = document.querySelectorAll("dl.glossary>dt");
   const toResArray = [];
 
   targetArray.forEach((item) => {
