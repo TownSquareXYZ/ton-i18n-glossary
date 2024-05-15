@@ -17,14 +17,11 @@ import { logHandler } from "./utils/logHandler";
   for (const lang in languageCodes) {
     const langCode = languageCodes[lang];
     if (lang === "English") {
-      str += `Term:${lang},Description:${lang},Part:${lang},`;
-      config[`term_${langCode}`] = i++;
-      config[`description_${langCode}`] = i++;
-      config[`partOfSpeech_${langCode}`] = i++;
-    } else {
       str += `Term:${lang},Description:${lang},`;
       config[`term_${langCode}`] = i++;
-      config[`description_${langCode}`] = i++;
+    } else {
+      str += `Term:${lang},`;
+      config[`term_${langCode}`] = i++;
     }
   }
 

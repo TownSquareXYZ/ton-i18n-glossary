@@ -1,5 +1,14 @@
 export const languageCodes: { [key: string]: string } = {
   English: "en",
+  ChineseSimplified: "zh-CN",
+  Russian: "ru",
+  Korean: "ko",
+  Polish: "pl",
+  Ukrainian: "uk",
+};
+
+export const languageCodesAll: { [key: string]: string } = {
+  English: "en",
   Afrikaans: "af",
   Amharic: "am",
   Arabic: "ar",
@@ -43,7 +52,7 @@ export const languageCodes: { [key: string]: string } = {
   Telugu: "te",
   Thai: "th",
   Turkish: "tr",
-  Ukranian: "uk",
+  Ukrainian: "uk",
   "Urdu (Pakistan)": "ur",
   Vietnamese: "vi",
   Yoruba: "yo",
